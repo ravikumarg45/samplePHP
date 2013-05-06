@@ -2,23 +2,25 @@
 
 function connectDatabase()
 {
-	$connection = mysql_connect("localhost","root","");
+	$connection = mysql_connect("localhost","","");
 
 	if(!$connection)
 	{
 		echo "Error in Database Connection";
 	}
 
-	mysql_select_db("3nethradbc",$connection);
+	mysql_select_db("db",$connection);
 
 	return $connection;
 }
 
 $con   = connectDatabase();
 
-	$email = $_POST['email'];
-	$password=$_POST['password'];
-
+if(isset($_POST['email']) && isset($_POST['password']))
+{
+	$email = mysql_real_escape_string($_POST['email']);
+	$password = mysql_real_escape_string($_POST['password']);
+}
 
 if(mysql_num_rows(mysql_query("SELECT * FROM user WHERE email = '$email' AND password=SHA('$password')")))
 {
@@ -39,5 +41,5 @@ if(mysql_num_rows(mysql_query("SELECT * FROM user WHERE email = '$email' AND pas
 			{
 				echo 'Sorry! Enter VALID userid and password.';
 			}
-
+mysql_close($con);
 ?>
